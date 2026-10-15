@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="bn" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0e1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="author" content="AL-AMIN">
+<title>NXT NEURAL CITY — AL-AMIN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SPLASH SCREEN -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="splash">
+  <div class="splash-bg"></div>
+  <div class="splash-content">
+    <div class="splash-logo">
+      <div class="logo-city">
+        <div class="logo-building b1"></div>
+        <div class="logo-building b2"></div>
+        <div class="logo-building b3"></div>
+        <div class="logo-building b4"></div>
+        <div class="logo-building b5"></div>
+      </div>
+    </div>
+    <h1 class="splash-title">NXT NEURAL CITY</h1>
+    <p class="splash-sub">AI-Powered Living Digital Twin</p>
+    <div class="splash-player">
+      <i class="fas fa-user-shield"></i>
+      <span>Mayor: <b>AL-AMIN</b></span>
+    </div>
+    <div class="boot-progress"><div class="boot-bar" id="bootBar"></div></div>
+    <div class="boot-text" id="bootText">INITIALIZING CITY...</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TOP BAR -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="brand-btn" onclick="openMenu()">
+      <div class="brand-icon">🌆</div>
+      <div class="brand-text">
+        <span class="brand-name">NXT NEURAL CITY</span>
+        <span class="brand-tag">Digital Twin</span>
+      </div>
+    </button>
+  </div>
+  
+  <div class="topbar-center">
+    <div class="topbar-stat">
+      <i class="fas fa-clock"></i>
+      <span id="topClock">00:00</span>
+    </div>
+    <div class="topbar-stat">
+      <i class="fas fa-calendar"></i>
+      <span id="topDate">Day 1</span>
+    </div>
+    <div class="topbar-stat">
+      <i class="fas fa-thermometer-half"></i>
+      <span id="topWeather">☀️ Sunny</span>
+    </div>
+  </div>
+  
+  <div class="topbar-right">
+    <div class="topbar-stat money">
+      <i class="fas fa-coins"></i>
+      <span id="topMoney">1,000,000</span>
+    </div>
+    <div class="topbar-stat pop">
+      <i class="fas fa-users"></i>
+      <span id="topPop">0</span>
+    </div>
+    <button class="topbar-btn" onclick="openSettings()" title="Settings">
+      <i class="fas fa-cog"></i>
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- MAIN CANVAS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="game-container">
+  <canvas id="cityCanvas"></canvas>
+  
+  <!-- MINIMAP -->
+  <div class="minimap">
+    <div class="minimap-header">
+      <i class="fas fa-map"></i>
+      <span>MINIMAP</span>
+    </div>
+    <canvas id="minimapCanvas" width="200" height="200"></canvas>
+  </div>
+  
+  <!-- CAMERA CONTROLS -->
+  <div class="camera-controls">
+    <button class="cam-btn" onclick="zoomIn()" title="Zoom In">
+      <i class="fas fa-search-plus"></i>
+    </button>
+    <button class="cam-btn" onclick="zoomOut()" title="Zoom Out">
+      <i class="fas fa-search-minus"></i>
+    </button>
+    <button class="cam-btn" onclick="resetCamera()" title="Reset">
+      <i class="fas fa-home"></i>
+    </button>
+  </div>
+  
+  <!-- VIEW MODES -->
+  <div class="view-modes">
+    <button class="view-btn active" data-view="city" onclick="setView('city')">
+      <i class="fas fa-city"></i>
+      <span>City</span>
+    </button>
+    <button class="view-btn" data-view="traffic" onclick="setView('traffic')">
+      <i class="fas fa-car"></i>
+      <span>Traffic</span>
+    </button>
+    <button class="view-btn" data-view="economy" onclick="setView('economy')">
+      <i class="fas fa-chart-line"></i>
+      <span>Economy</span>
+    </button>
+    <button class="view-btn" data-view="happiness" onclick="setView('happiness')">
+      <i class="fas fa-smile"></i>
+      <span>Happiness</span>
+    </button>
+    <button class="view-btn" data-view="pollution" onclick="setView('pollution')">
+      <i class="fas fa-leaf"></i>
+      <span>Pollution</span>
+    </button>
+  </div>
+  
+  <!-- TIME CONTROLS -->
+  <div class="time-controls">
+    <button class="time-btn" onclick="togglePause()" id="pauseBtn">
+      <i class="fas fa-pause"></i>
+    </button>
+    <button class="time-btn" onclick="setSpeed(1)" data-speed="1">
+      <i class="fas fa-forward"></i> 1x
+    </button>
+    <button class="time-btn" onclick="setSpeed(2)" data-speed="2">
+      <i class="fas fa-forward"></i> 2x
+    </button>
+    <button class="time-btn active" onclick="setSpeed(3)" data-speed="3">
+      <i class="fas fa-forward"></i> 3x
+    </button>
+    <button class="time-btn" onclick="setSpeed(5)" data-speed="5">
+      <i class="fas fa-forward"></i> 5x
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- BOTTOM PANEL — MAYOR CONTROLS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="bottom-panel">
+  
+  <!-- City Stats -->
+  <div class="stats-row">
+    <div class="stat-card" onclick="showStatDetail('happiness')">
+      <div class="stat-icon happy">😊</div>
+      <div class="stat-info">
+        <div class="stat-value" id="statHappiness">78%</div>
+        <div class="stat-label">Happiness</div>
+      </div>
+      <div class="stat-trend up">↑</div>
+    </div>
+    
+    <div class="stat-card" onclick="showStatDetail('economy')">
+      <div class="stat-icon economy">💰</div>
+      <div class="stat-info">
+        <div class="stat-value" id="statEconomy">92%</div>
+        <div class="stat-label">Economy</div>
+      </div>
+      <div class="stat-trend up">↑</div>
+    </div>
+    
+    <div class="stat-card" onclick="showStatDetail('traffic')">
+      <div class="stat-icon traffic">🚗</div>
+      <div class="stat-info">
+        <div class="stat-value" id="statTraffic">45%</div>
+        <div class="stat-label">Traffic</div>
+      </div>
+      <div class="stat-trend down">↓</div>
+    </div>
+    
+    <div class="stat-card" onclick="showStatDetail('power')">
+      <div class="stat-icon power">⚡</div>
+      <div class="stat-info">
+        <div class="stat-value" id="statPower">92%</div>
+        <div class="stat-label">Power</div>
+      </div>
+      <div class="stat-trend up">↑</div>
+    </div>
+    
+    <div class="stat-card" onclick="showStatDetail('pollution')">
+      <div class="stat-icon pollution">🌱</div>
+      <div class="stat-info">
+        <div class="stat-value" id="statPollution">34%</div>
+        <div class="stat-label">Pollution</div>
+      </div>
+      <div class="stat-trend up">↑</div>
+    </div>
+    
+    <div class="stat-card" onclick="showStatDetail('employment')">
+      <div class="stat-icon employment">💼</div>
+      <div class="stat-info">
+        <div class="stat-value" id="statEmployment">89%</div>
+        <div class="stat-label">Employment</div>
+      </div>
+      <div class="stat-trend up">↑</div>
+    </div>
+  </div>
+  
+  <!-- Action Buttons -->
+  <div class="action-row">
+    <button class="action-btn build" onclick="openBuildMenu()">
+      <i class="fas fa-hammer"></i>
+      <span>BUILD</span>
+    </button>
+    <button class="action-btn policy" onclick="openPolicyMenu()">
+      <i class="fas fa-scroll"></i>
+      <span>POLICY</span>
+    </button>
+    <button class="action-btn event" onclick="openEventMenu()">
+      <i class="fas fa-calendar-star"></i>
+      <span>EVENTS</span>
+    </button>
+    <button class="action-btn citizens" onclick="openCitizensMenu()">
+      <i class="fas fa-users"></i>
+      <span>CITIZENS</span>
+    </button>
+    <button class="action-btn analytics" onclick="openAnalytics()">
+      <i class="fas fa-chart-bar"></i>
+      <span>ANALYTICS</span>
+    </button>
+    <button class="action-btn log" onclick="openEventLog()">
+      <i class="fas fa-list"></i>
+      <span>LOG</span>
+    </button>
+  </div>
+  
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SIDE PANEL — DETAILS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<aside class="side-panel" id="sidePanel">
+  <div class="side-panel-header">
+    <h3 id="sidePanelTitle">Details</h3>
+    <button onclick="closeSidePanel()">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="side-panel-body" id="sidePanelBody">
+    <!-- Content loaded dynamically -->
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- MODAL SYSTEM -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalContent" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2 id="modalTitle">Modal</h2>
+      <button onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- BUILD MENU -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="buildModal" onclick="closeBuildMenu(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2>🏗️ Build Buildings</h2>
+      <button onclick="closeBuildMenu()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="build-categories">
+        <button class="build-cat active" data-cat="residential">🏠 Residential</button>
+        <button class="build-cat" data-cat="commercial">🏪 Commercial</button>
+        <button class="build-cat" data-cat="industrial">🏭 Industrial</button>
+        <button class="build-cat" data-cat="education">🏫 Education</button>
+        <button class="build-cat" data-cat="healthcare">🏥 Healthcare</button>
+        <button class="build-cat" data-cat="recreation">🌳 Recreation</button>
+        <button class="build-cat" data-cat="infrastructure">⚡ Infrastructure</button>
+      </div>
+      <div class="build-list" id="buildList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SETTINGS MODAL -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="settingsModal" onclick="closeSettings(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h2>⚙️ Settings</h2>
+      <button onclick="closeSettings()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="settings-tabs">
+        <button class="settings-tab active" data-tab="graphics" onclick="switchTab('graphics')">Graphics</button>
+        <button class="settings-tab" data-tab="audio" onclick="switchTab('audio')">Audio</button>
+        <button class="settings-tab" data-tab="gameplay" onclick="switchTab('gameplay')">Gameplay</button>
+        <button class="settings-tab" data-tab="save" onclick="switchTab('save')">Save/Load</button>
+      </div>
+      
+      <div class="settings-panel active" id="tab-graphics">
+        <label>Graphics Quality
+          <select id="graphicsQuality" onchange="updateGraphics(this.value)">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+            <option value="ultra">Ultra</option>
+          </select>
+        </label>
+        <label>Show Grid
+          <input type="checkbox" id="showGrid" onchange="toggleGrid(this.checked)">
+        </label>
+        <label>Show Zones
+          <input type="checkbox" id="showZones" checked onchange="toggleZones(this.checked)">
+        </label>
+        <label>Show Names
+          <input type="checkbox" id="showNames" onchange="toggleNames(this.checked)">
+        </label>
+      </div>
+      
+      <div class="settings-panel" id="tab-audio">
+        <label>Master Volume
+          <input type="range" id="masterVolume" min="0" max="100" value="80" oninput="updateVolume('master', this.value)">
+        </label>
+        <label>Ambient Sounds
+          <input type="range" id="ambientVolume" min="0" max="100" value="60" oninput="updateVolume('ambient', this.value)">
+        </label>
+        <label>Effects Volume
+          <input type="range" id="effectsVolume" min="0" max="100" value="80" oninput="updateVolume('effects', this.value)">
+        </label>
+      </div>
+      
+      <div class="settings-panel" id="tab-gameplay">
+        <label>Simulation Speed
+          <select id="gameSpeed" onchange="updateSpeed(this.value)">
+            <option value="1">1x (Slow)</option>
+            <option value="2">2x</option>
+            <option value="3" selected>3x (Normal)</option>
+            <option value="5">5x (Fast)</option>
+            <option value="10">10x (Very Fast)</option>
+          </select>
+        </label>
+        <label>Citizens Count
+          <select id="citizenCount" onchange="updateCitizenCount(this.value)">
+            <option value="100">100 (Low)</option>
+            <option value="500">500 (Medium)</option>
+            <option value="1000" selected>1000 (High)</option>
+            <option value="2000">2000 (Ultra)</option>
+          </select>
+        </label>
+      </div>
+      
+      <div class="settings-panel" id="tab-save">
+        <button class="save-btn" onclick="saveCity()">
+          <i class="fas fa-save"></i> Save City
+        </button>
+        <button class="save-btn" onclick="loadCity()">
+          <i class="fas fa-folder-open"></i> Load City
+        </button>
+        <button class="save-btn" onclick="exportCity()">
+          <i class="fas fa-download"></i> Export to File
+        </button>
+        <button class="save-btn danger" onclick="resetCity()">
+          <i class="fas fa-trash"></i> Reset City
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TOAST -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- SCRIPTS — সব একবারেই যোগ (ভবিষ্যতে এডিট লাগবে না) -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<script src="config.js"></script>
+<script src="city.js"></script>
+<script src="buildings.js"></script>
+<script src="roads.js"></script>
+<script src="render.js"></script>
+<script src="citizen.js"></script>
+<script src="ai.js"></script>
+<script src="schedule.js"></script>
+<script src="pathfinding.js"></script>
+<script src="population.js"></script>
+<script src="traffic.js"></script>
+<script src="economy.js"></script>
+<script src="events.js"></script>
+<script src="weather.js"></script>
+<script src="mayor.js"></script>
+<script src="analytics.js"></script>
+<script src="main.js"></script>
+
+</body>
+</html>
